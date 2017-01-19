@@ -1,0 +1,236 @@
+<Entities build="b484" majorVersion="7" minorVersion="1" modelPersistenceProviderPackage="NeoPersistenceProviderPackage" revision="0" schemaVersion="910">
+<StyleDefinitions/>
+<Networks/>
+<PersistenceProviderPackages/>
+<Mashups/>
+<ScriptFunctionLibraries/>
+<Projects>
+<Project dependsOn="" description="" documentationContent="" homeMashup="" lastModifiedDate="2016-09-09T14:22:23.789-04:00" name="FoundationSimulator" packageVersion="1.0.0" projectName="FoundationSimulator" tags="">
+<Owner name="Administrator" type="User"/>
+<avatar/>
+<DesignTimePermissions>
+<Create/>
+<Read/>
+<Update/>
+<Delete/>
+<Metadata/>
+</DesignTimePermissions>
+<RunTimePermissions/>
+<VisibilityPermissions>
+<Visibility/>
+</VisibilityPermissions>
+<ConfigurationTables/>
+<ConfigurationChanges>
+<ConfigurationChange changeAction="CREATE" changeReason="header : name : updated " timestamp="2016-09-09T14:14:51.941-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-09T14:17:03.203-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-09T14:22:23.789-04:00" user="Administrator"/>
+</ConfigurationChanges>
+</Project>
+</Projects>
+<Users/>
+<DirectoryServices/>
+<Widgets/>
+<MediaEntities/>
+<Groups/>
+<PersistenceProviders/>
+<ModelTags/>
+<LocalizationTables/>
+<Dashboards/>
+<DataAnalysisDefinitions/>
+<DataShapes/>
+<Things>
+<Thing description="" documentationContent="<p><br></p> " effectiveThingPackage="ConfiguredThing" enabled="true" homeMashup="" identifier="" lastModifiedDate="2016-09-12T13:34:04.832-04:00" name="Foundation_Tutorial_Services" projectName="FoundationSimulator" published="false" tags="FoundationTutorial:Home Application" thingTemplate="GenericThing" valueStream="">
+<Owner name="Administrator" type="User"/>
+<avatar/>
+<DesignTimePermissions>
+<Create/>
+<Read/>
+<Update/>
+<Delete/>
+<Metadata/>
+</DesignTimePermissions>
+<RunTimePermissions/>
+<VisibilityPermissions>
+<Visibility/>
+</VisibilityPermissions>
+<ConfigurationTables/>
+<ThingShape>
+<PropertyDefinitions>
+<PropertyDefinition aspect.cacheTime="0.0" aspect.dataChangeType="VALUE" aspect.isLogged="false" aspect.isPersistent="true" aspect.isReadOnly="false" baseType="BOOLEAN" category="" description="" isLocalOnly="false" name="flag" ordinal="1"/>
+</PropertyDefinitions>
+<ServiceDefinitions/>
+<EventDefinitions/>
+<ServiceMappings/>
+<ServiceImplementations/>
+<Subscriptions>
+<Subscription enabled="false" eventName="Timer" source="ThirtySecondTimer" sourceProperty="">
+<ServiceImplementation description="" handlerName="Script" name="ThirtySecondTimer:Timer">
+<ConfigurationTables>
+<ConfigurationTable description="" isMultiRow="false" name="Script" ordinal="0">
+<DataShape>
+<FieldDefinitions>
+<FieldDefinition baseType="STRING" description="code" name="code" ordinal="0"/>
+</FieldDefinitions>
+</DataShape>
+<Rows>
+<Row>
+<code>
+<![CDATA[
+// Populate properties for the house the first time the service runs only.
+ if (Things["HouseThing"].houseID == "") {
+ Things["HouseThing"].houseID = "12345";
+ Things["HouseThing"].address = "140 Kendrick Street";
+ Things["HouseThing"].city = "Needham";
+ Things["HouseThing"].state = "MA";
+ Thin
+]]>
+<![CDATA[
+gs["HouseThing"].zip = "02494";
+ Things["HouseThing"].house_lat_long = "42.296375,-71.214556,0";
+ Things["HouseThing"].lightID = "11111";
+ Things["HouseThing"].thermostatID = "99999";
+ Things["HouseThing"].temperature = 70;
+ Things["Foundation_Tutorial_Services"].flag = "true";
+ }
+ 
+ // Light Properties //
+ 
+ // Every 30 seconds change the light status to ON (100 watts) or OFF (0 watts)
+ if (Things["HouseThing"].watts == "0") {
+ Things["HouseThing"].watts = 100;
+ } else if (Things["HouseThing"].watts == "100") {
+ Things["HouseThing"].watts = 0;
+ } else {
+ Things["HouseThing"].watts = 0;
+ }
+ 
+ // Thermostat Properties //
+ 
+ // Temporary fix. When the temperature is supposed to be set to 69.6 is set to 69.60000000000000001.
+ var temp = Things["HouseThing"].temperature;
+ temp = Things["HouseThing"].temperature.toFixed(1);
+ temp = parseFloat(temp);
+ 
+ // Increase temperature a small amount until it reachs 70. Once it exceeds 70, turn AC ON, and then decrement at a faster pace back to 68.
+ if(temp < 70 && temp > 68 && me.flag == true) {
+ Things["HouseThing"].temperature = temp + 0.2;
+ //logger.error("Increasing temperature: " + Things["HouseThing"].temperature);
+ } else if (temp < 70 && temp > 68 && me.flag == false) {
+ Things["HouseThing"].temperature = temp - 0.5;
+ //logger.error("Decreasing temperature: " + Things["HouseThing"].temperature);
+ } else if (temp == 70) {
+ Things["HouseThing"].temperature = temp - 0.5;
+ me.flag = false;
+ //logger.error("Temperature reached 70, decreasing: " + Things["HouseThing"].temperature);
+ } else if (temp == 68) {
+ Things["HouseThing"].temperature = temp + 0.2;
+ me.flag = true;
+ //logger.error("Temperature reached 68, increasing: " + Things["HouseThing"].temperature);
+ }
+ else{
+ Things["HouseThing"].temperature = 70
+ me.flag = false;
+ }
+ 
+ 
+ //Set measurement value to be a random number between 0 and 100
+ Things["HouseThing"].measurement = Math.random() * 100;
+]]>
+</code>
+</Row>
+</Rows>
+</ConfigurationTable>
+</ConfigurationTables>
+</ServiceImplementation>
+</Subscription>
+</Subscriptions>
+</ThingShape>
+<PropertyBindings/>
+<RemotePropertyBindings/>
+<RemoteServiceBindings/>
+<RemoteEventBindings/>
+<AlertConfigurations>
+<AlertDefinitions name="flag"/>
+</AlertConfigurations>
+<ImplementedShapes/>
+<ThingProperties>
+<flag>false</flag>
+</ThingProperties>
+<ConfigurationChanges>
+<ConfigurationChange changeAction="CREATE" changeReason="" timestamp="2016-09-09T14:22:23.788-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="subscriptions : ThirtySecondTimer:Timer : Enabled " timestamp="2016-09-09T14:22:37.585-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="subscriptions : ThirtySecondTimer:Timer : Code Updated " timestamp="2016-09-12T11:47:39.020-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-12T11:47:48.601-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-12T13:21:42.616-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-12T13:25:05.962-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-12T13:28:24.070-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="" timestamp="2016-09-12T13:29:26.985-04:00" user="Administrator"/>
+<ConfigurationChange changeAction="MODIFY" changeReason="subscriptions : ThirtySecondTimer:Timer : Disabled " timestamp="2016-09-12T13:34:04.832-04:00" user="Administrator"/>
+</ConfigurationChanges>
+</Thing>
+<Thing description="" documentationContent="<p><br></p> " effectiveThingPackage="TimerThing" enabled="true" homeMashup="" identifier="" lastModifiedDate="2016-09-09T14:22:23.787-04:00" name="ThirtySecondTimer" projectName="FoundationSimulator" published="false" tags="FoundationTutorial:Home Application" thingTemplate="Timer" valueStream="">
+<Owner name="Administrator" type="User"/>
+<avatar/>
+<DesignTimePermissions>
+<Create/>
+<Read/>
+<Update/>
+<Delete/>
+<Metadata/>
+</DesignTimePermissions>
+<RunTimePermissions/>
+<VisibilityPermissions>
+<Visibility/>
+</VisibilityPermissions>
+<ConfigurationTables>
+<ConfigurationTable description="General Settings" isMultiRow="false" name="Settings" ordinal="0">
+<DataShape>
+<FieldDefinitions>
+<FieldDefinition aspect.defaultValue="true" baseType="BOOLEAN" description="Automatically enable timer on startup" name="enabled" ordinal="0"/>
+<FieldDefinition baseType="USERNAME" description="User context in which to run event handlers" name="runAsUser" ordinal="0"/>
+<FieldDefinition aspect.defaultValue="60000.0" baseType="NUMBER" description="Update rate" name="updateRate" ordinal="0"/>
+</FieldDefinitions>
+</DataShape>
+<Rows>
+<Row>
+<runAsUser/>
+<updateRate>30000.0</updateRate>
+<enabled>true</enabled>
+</Row>
+</Rows>
+</ConfigurationTable>
+</ConfigurationTables>
+<ThingShape>
+<PropertyDefinitions/>
+<ServiceDefinitions/>
+<EventDefinitions/>
+<ServiceMappings/>
+<ServiceImplementations/>
+<Subscriptions/>
+</ThingShape>
+<PropertyBindings/>
+<RemotePropertyBindings/>
+<RemoteServiceBindings/>
+<RemoteEventBindings/>
+<AlertConfigurations/>
+<ImplementedShapes/>
+<ThingProperties/>
+<ConfigurationChanges>
+<ConfigurationChange changeAction="CREATE" changeReason="" timestamp="2016-09-09T14:22:23.787-04:00" user="Administrator"/>
+</ConfigurationChanges>
+</Thing>
+</Things>
+<Logs/>
+<Authenticators/>
+<ThingPackages/>
+<ApplicationKeys/>
+<StateDefinitions/>
+<ThingTemplates/>
+<ExtensionPackages/>
+<Organizations/>
+<Menus/>
+<Resources/>
+<DataTags/>
+<ThingShapes/>
+<Subsystems/>
+</Entities>
