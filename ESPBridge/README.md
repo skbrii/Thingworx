@@ -1,5 +1,5 @@
 #Описание API
-После включения ESPBridge ждет от 1 до 10 секунд, затем подключается к вифи.
+После включения ESPBridge ждет от 1 до 10 секунд, затем подключается к WiFi.
 
 ###Конфигурация сериал-порта
 ESPBridge принимает команды на скорости 19200, 8N1 (`Serial.begin(19200);`).
@@ -45,7 +45,7 @@ ESPBridge принимает команды на скорости 19200, 8N1 (`S
 `rOK_SETPORT\r\n`|`rOK_SETPORT\r\n`| Порт сохранен.
 `rFAIL_SETPORT\r\n`|`rFAIL_SETPORT\r\n`| Порт не сохранен.
 `rOK_CONN2SERVER\r\n`|`rOK_CONN2SERVER\r\n`| Подключен к серверу.
-rFAIL_CONN2S`ERVER:a\r\n`|`rFAIL_CONN2SERVER:a\r\n`| Ошибка подключения к серверу. `a` может принимать значения от -1 до -15 (с некоторыми исключениями и дополнениями), расшифровки см. [вот тут](https://github.com/esp8266/Arduino/blob/master/tools/sdk/include/espconn.h#L12).
+`rFAIL_CONN2SERVER:a\r\n`|`rFAIL_CONN2SERVER:a\r\n`| Ошибка подключения к серверу. `a` может принимать значения от -1 до -15 (с некоторыми исключениями и дополнениями), расшифровки см. [вот тут](https://github.com/esp8266/Arduino/blob/master/tools/sdk/include/espconn.h#L12).
 `rFAIL_NOTCONNECTEDTOSERVER\r\n`|`rFAIL_NOTCONNECTEDTOSERVER\r\n`| Нет подключения к серверу.
 `rOK_CONNCLOSE\r\n`|`rOK_CONNCLOSE\r\n`| Соединение закрыто.
 `rOK_SENDDATA\r\n`|`rOK_SENDDATA\r\n`| Данные отправлены на сервер.
@@ -53,5 +53,47 @@ rFAIL_CONN2S`ERVER:a\r\n`|`rFAIL_CONN2SERVER:a\r\n`| Ошибка подключ
 ###Пример работы с модулем
 
 ```
+E
+rOK_ECHO_DISABLED;
+?sw
+rOK_CONN2WIFI;
+E
+rOK_ECHO_DISABLED;
+h34.####.152
+rOK_SETHOST;
+p80
+rOK_SETPORT;
+i
+rOK_BUFFER_CLEANED;
+aPUT /Thingworx/Things/testThing/Properties/temperature HTTP/1.1
+rOK_BUFFER_APPENDED;
+aHost: 34########.152
+rOK_BUFFER_APPENDED;
+aappKey: cdf2################e43c4fb7
+rOK_BUFFER_APPENDED;
+aContent-Type: application/json
+rOK_BUFFER_APPENDED;
+aContent-Length: 19
+rOK_BUFFER_APPENDED;
+a
+rOK_BUFFER_APPENDED;
+a{"temperature": 17}
+rOK_BUFFER_APPENDED;
+C
+rOK_CONN2SERVER
+gHTTP/1.1 200 
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+X-FRAME-OPTIONS: SAMEORIGIN
+Expires: 0
+Cache-Control: no-store, no-cache
+Cache-Control: post-check=0, pre-check=0
+Pragma: no-cache
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Wed, 01 Feb 2017 13:50:55 GMT
+
+0
+$
 
 ```
